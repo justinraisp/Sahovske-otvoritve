@@ -14,7 +14,7 @@ Za vsako otvoritev bom zajel:
 * poteze in število potez v otvoritvi
 
 Delovne hipoteze:
-* Ali so si podobne najuspešnejše in najmanj uspešne otvoritve?
+* Ali so si med seboj podobne najuspešnejše in med seboj najmanj uspešne otvoritve?
 * Ali obstaja povezava med uspešnostjo in datumom zadnje partije?
 * Ali lahko na podlagi povprečnega in odigranega ratinga igralca sklepamo na odstotek zmage?
 * Ali so otvoritve belih uspešnejše od otvoritve črnih?
