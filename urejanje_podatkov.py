@@ -2,6 +2,8 @@ import csv
 import os
 import re
 import json
+import sys
+
 
 vzorec_bloka = re.compile(
     r'<tr id="yui-rec\d+" class="(yui-dt-(first|last) )?yui-dt-(odd|even)" style="">.*?'
@@ -33,6 +35,48 @@ for i in range(4):
             vse_otvoritve.append(otvoritev)
 
 
-print(vse_otvoritve[0])
-print(len(vse_otvoritve))
+def uredi_otvoritev(otvoritev):
+    otvoritev['stevilo_iger'] = int(otvoritev['stevilo_iger'])
+    otvoritev['performance_rating'] = int(otvoritev['performance_rating'])
+    otvoritev['povprecen_rating'] = int(otvoritev['povprecen_rating'])
+    otvoritev['zmaga'] = float(otvoritev['zmaga'].strip('%'))
+    otvoritev['remi'] = float(otvoritev['remi'].strip('%'))
+    otvoritev['poraz'] = float(otvoritev['poraz'].strip('%'))
 
+for otvoritev in vse_otvoritve:
+    uredi_otvoritev(otvoritev)
+
+
+def pripravi_imenik(ime_datoteke):
+    '''Če še ne obstaja, pripravi prazen imenik za dano datoteko.'''
+    imenik = os.path.dirname(ime_datoteke)
+    if imenik:
+        os.makedirs(imenik, exist_ok=True)
+
+def zapisi_csv(slovarji, imena_polj, ime_datoteke):
+    '''Iz seznama slovarjev ustvari CSV datoteko z glavo.'''
+    pripravi_imenik(ime_datoteke)
+    with open(ime_datoteke, 'w', encoding='utf-8') as csv_datoteka:
+        writer = csv.DictWriter(csv_datoteka, fieldnames=imena_polj)
+        writer.writeheader()
+        writer.writerows(slovarji)
+
+
+def zapisi_json(objekt, ime_datoteke):
+    '''Iz danega objekta ustvari JSON datoteko.'''
+    pripravi_imenik(ime_datoteke)
+    with open(ime_datoteke, 'w', encoding='utf-8') as json_datoteka:
+        json.dump(objekt, json_datoteka, indent=4, ensure_ascii=False)
+
+zapisi_json(vse_otvoritve, 'obdelani-podatki/otvoritve.json')
+zapisi_csv(vse_otvoritve, ["otvoritev",
+        "barva",
+        "stevilo_iger",
+        "eco",
+        "datum",
+        "performance_rating",
+        "povprecen_rating",
+        "zmaga",
+        "remi",
+        "poraz",
+        "poteze"],'obdelani-podatki/otvoritve.csv')
